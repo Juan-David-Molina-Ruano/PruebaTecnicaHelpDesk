@@ -1,7 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using PruebaTecnica.BusinessLogic;
+using PruebaTecnica.DataAccess;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddBLDependecies(builder.Configuration);
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("url")));
 
 var app = builder.Build();
 
