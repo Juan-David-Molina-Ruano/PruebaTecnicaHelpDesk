@@ -11,7 +11,7 @@ namespace PruebaTecnica.BusinessEntities
         public int Id { get; set; }
         public string QuestionText { get; set; }
         public DateOnly CreateDate { get; set; }
-        public bool Estatus { get; set; }
+        public byte Estatus { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
         public IList<Answer> Answers { get; set; }
