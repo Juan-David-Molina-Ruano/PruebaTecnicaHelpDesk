@@ -25,9 +25,9 @@ namespace PruebaTecnica.BusinessLogic
             return await _userDAL.createUser(user);
         }
 
-        public async Task<List<User>> selectAlltUsers()
+        public async Task<User> Login(User user)
         {
-           return await _userDAL.selectAllUsers();
+            return await _userDAL.Login(user);
         }
     }
 }

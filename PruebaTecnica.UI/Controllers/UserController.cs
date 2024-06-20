@@ -1,31 +1,25 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
 using PruebaTecnica.BusinessEntities;
 using PruebaTecnica.BusinessLogic;
+using System.Security.Claims;
 
 namespace PruebaTecnica.UI.Controllers
 {
     public class UserController : Controller
     {
         private readonly UserBL _userBL;
-        public UserController(UserBL userBL) 
-        { 
+        public UserController(UserBL userBL)
+        {
             _userBL = userBL;
         }
-        // GET: UserController
-        public async Task<ActionResult> Index()
-        {
-            var users = await _userBL.selectAlltUsers();
-            return View(users);
-        }
 
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
+        [AllowAnonymous]
         // GET: UserController/Create
         public ActionResult Create()
         {
@@ -35,60 +29,73 @@ namespace PruebaTecnica.UI.Controllers
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<ActionResult> Create(User user)
         {
-            try
-            {
-                await _userBL.createUser(user);
-                return RedirectToAction(nameof(Index), "Home");
+            string result = await _userBL.createUser(user);
 
-            }
-            catch
+            if (result == "Username already exists")
             {
-                return View();
+
+                ViewBag.Error = "Username already exists";
+                return View(user);
+            }
+            else if (result == "User created successfully")
+            {
+                // Handle successful creation
+                return RedirectToAction("Login", "User");
+            }
+            else
+            {
+                // Handle unexpected errors
+                ViewBag.Error = "An unexpected error occurred";
+                return View(user);
             }
         }
 
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> Login(string ReturnUrl)
         {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
 
-        // POST: UserController/Edit/5
+        [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Login([Bind("UserName,UserPassword")] User user, string ReturnUrl)
         {
-            try
+            if (user == null)
             {
-                return RedirectToAction(nameof(Index));
+                ViewBag.Error = "No se encuentra registrado";
+                ViewBag.pReturnUrl = ReturnUrl;
+                return View(user);
             }
-            catch
+
+            var usuarioAut = await _userBL.Login(user);
+
+            if (usuarioAut != null && usuarioAut.Id > 0 && usuarioAut.UserName == user.UserName)
             {
-                return View();
+                var claims = new[] {
+                    new Claim(ClaimTypes.Name, usuarioAut.UserName),
+                    new Claim("Id", usuarioAut.Id.ToString())
+                };
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties { IsPersistent = true });
+
+                if (!string.IsNullOrWhiteSpace(ReturnUrl))
+                    return Redirect(ReturnUrl);
+                else
+                    return RedirectToAction("Index", "Question");
+            }
+            else
+            {
+                ViewBag.Error = "Credenciales incorrectas";
+                ViewBag.pReturnUrl = ReturnUrl;
+                return View(user);
             }
         }
 
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
