@@ -170,6 +170,22 @@ namespace PruebaTecnica.DataAccess
             return question;
         }
 
+        public async Task<int> DeleteQuestion(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand("DeleteQuestionById", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@QuestionId", id);
+
+                   return await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+
 
 
     }

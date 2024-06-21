@@ -4,22 +4,20 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="container">
-    <div class="row">
+<div class="container mt-4">
+    <div class="row mb-3">
         <div class="col-md-10">
             <h1>Questions</h1>
         </div>
-        <div class="col-md-2">
-            <p class="text-md-right">
-                <a asp-action="Create" class="btn btn-primary">Make a question</a>
-            </p>
+        <div class="col-md-2 text-md-right">
+            <a asp-action="Create" class="btn btn-primary">Make a question</a>
         </div>
     </div>
 
     <div class="list-group">
         @foreach (var item in Model)
         {
-            <div class="list-group-item">
+            <div class="list-group-item mb-3">
                 <h4 class="list-group-item-heading">@Html.DisplayFor(modelItem => item.QuestionText)</h4>
                 <p class="list-group-item-text">
                     <div class="row">
@@ -27,15 +25,20 @@
                             <strong>Created Date:</strong> @item.CreateDate.ToString("dd/MM/yyyy")<br />
                         </div>
                         <div class="col-md-4">
-                            <strong>Status:</strong> @Html.DisplayFor(modelItem => item.Estatus)<br />
+                            <strong>Status:</strong> @(item.Estatus == 0 ? "Open" : "Close")<br />
                         </div>
                         <div class="col-md-4">
                             <strong>Created by:</strong> @Html.DisplayFor(modelItem => item.User.UserName)
                         </div>
                     </div>
                 </p>
-                <a asp-action="Index" asp-controller="Answer" asp-route-id="@item.Id" class="btn btn-info">Ver respuestas</a>
-                <a asp-action="Create" asp-controller="Answer" asp-route-questionId="@item.Id" class="btn btn-info">Responder</a>
+                <div>
+                    <a asp-action="Index" asp-controller="Answer" asp-route-id="@item.Id" class="btn btn-info">View answers</a>
+                    @if (item.Estatus == 0)
+                    {
+                        <a asp-action="Create" asp-controller="Answer" asp-route-questionId="@item.Id" class="btn btn-info">Reply</a>
+                    }
+                </div>
             </div>
         }
     </div>

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PruebaTecnica.UI.styles.css" asp-append-version="true" />
-    <!-- Agrega esto en _Layout.cshtml o _ViewImports.cshtml -->
 </head>
 <body>
     <header>
@@ -18,13 +17,21 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-route-id="@User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value" asp-controller="Question" asp-action="myQuestions">My Questions</a>
                         </li>
                     </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-white btn btn-dark" asp-controller="User" asp-action="Login" style="margin-top:4px; margin-bottom:4px">
+                                Cerrar Sesion
+                            </a>
+                        </li>
+                    </ul>
                 </div>
+               
             </div>
         </nav>
     </header>

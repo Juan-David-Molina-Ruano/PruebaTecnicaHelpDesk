@@ -19,9 +19,9 @@ namespace PruebaTecnica.BusinessLogic
             _answerDAL = answerDAL;
         }
 
-        public async Task<IEnumerable<Answer>> obtenerAnswersQuestion(int questionId)
+        public async Task<IEnumerable<Answer>> AnswersQuestion(int questionId)
         {
-            return await _answerDAL.obtenerAnswersQuestion(questionId);
+            return await _answerDAL.AnswersQuestion(questionId);
         }
 
         public async Task<string> SaveAnswer(Answer answer)

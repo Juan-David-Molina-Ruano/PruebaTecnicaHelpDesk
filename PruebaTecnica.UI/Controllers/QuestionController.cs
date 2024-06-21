@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PruebaTecnica.BusinessEntities;
 using PruebaTecnica.BusinessLogic;
@@ -6,6 +7,7 @@ using System.Security.Claims;
 
 namespace PruebaTecnica.UI.Controllers
 {
+    [Authorize]
     public class QuestionController : Controller
     {
         private readonly QuestionBL _questionBL;
@@ -86,6 +88,19 @@ namespace PruebaTecnica.UI.Controllers
             try
             {
                 await _questionBL.UpdateQuestion(question);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public async Task<ActionResult> deletetMyQuestion(int id)
+        {
+            try
+            {
+                await _questionBL.DeleteQuestion(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

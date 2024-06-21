@@ -17,7 +17,7 @@ namespace PruebaTecnica.DataAccess
             _connectionString = connectionString;
         }
 
-        public async Task<IEnumerable<Answer>> obtenerAnswersQuestion(int questionId)
+        public async Task<IEnumerable<Answer>> AnswersQuestion(int questionId)
         {
             List<Answer> answers = new List<Answer>();
 

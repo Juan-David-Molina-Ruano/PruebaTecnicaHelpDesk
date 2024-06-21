@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PruebaTecnica.BusinessEntities;
 using PruebaTecnica.BusinessLogic;
 
 namespace PruebaTecnica.UI.Controllers
 {
+    [Authorize]
     public class AnswerController : Controller
     {
         private readonly AnswerBL _answerBL;
@@ -13,7 +15,7 @@ namespace PruebaTecnica.UI.Controllers
         }
         public async Task<IActionResult> Index(int id)
         {
-            var answers =  await _answerBL.obtenerAnswersQuestion(id);
+            var answers =  await _answerBL.AnswersQuestion(id);
             return View(answers);
         }
 

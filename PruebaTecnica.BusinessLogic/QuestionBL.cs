@@ -42,5 +42,10 @@ namespace PruebaTecnica.BusinessLogic
         {
             return await _questionDAL.GetQuestionById(id);
         }
+
+        public async Task<int> DeleteQuestion(int id)
+        {
+           return await _questionDAL.DeleteQuestion(id);
+        }
     }
 }

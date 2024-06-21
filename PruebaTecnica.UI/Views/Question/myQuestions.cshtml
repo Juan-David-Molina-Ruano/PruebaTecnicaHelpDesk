@@ -28,7 +28,7 @@
                             <strong>Created Date:</strong> @item.CreateDate.ToString("dd/MM/yyyy")<br />
                         </div>
                         <div class="col-md-4">
-                            <strong>Estatus:</strong> @Html.DisplayFor(modelItem => item.Estatus)<br />
+                            <strong>Status:</strong> @(item.Estatus == 0 ? "Open" : "Close")<br />
                         </div>
                         <div class="col-md-4">
                             <strong>Created by:</strong> @Html.DisplayFor(modelItem => item.User.UserName)
@@ -37,6 +37,7 @@
                 </p>
                 <a asp-action="Index" asp-controller="Answer" asp-route-id="@item.Id" class="btn btn-info">View Answers</a>
                 <a asp-action="editMyQuestions" asp-controller="Question" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a>
+                <a asp-action="deletetMyQuestion" asp-controller="Question" asp-route-id="@item.Id" class="btn btn-secondary">Delete</a>
             </div>
         }
     </div>
