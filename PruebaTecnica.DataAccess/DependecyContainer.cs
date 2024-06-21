@@ -20,6 +20,7 @@ namespace PruebaTecnica.DataAccess
 
             services.AddScoped<UserDAL>(provider => new UserDAL(connectionString));
             services.AddScoped<QuestionDAL>(provider => new QuestionDAL(connectionString));
+            services.AddScoped<AnswerDAL>(provider => new AnswerDAL(connectionString));
 
             return services;
         }

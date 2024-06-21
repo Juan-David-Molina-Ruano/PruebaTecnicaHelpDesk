@@ -10,7 +10,7 @@ namespace PruebaTecnica.BusinessEntities
     {
         public int Id { get; set; }
         public string AnswerText { get; set; }
-        public DateOnly CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
         public int UserId { get; set; }
         public int QuestionId { get; set; }
         public User User { get; set; }

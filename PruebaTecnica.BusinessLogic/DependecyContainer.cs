@@ -17,6 +17,7 @@ namespace PruebaTecnica.BusinessLogic
            services.AddDALDependecies(configuration);
             services.AddScoped<UserBL>(); 
             services.AddScoped<QuestionBL>(); 
+            services.AddScoped<AnswerBL>(); 
            return services;
         }
     }
