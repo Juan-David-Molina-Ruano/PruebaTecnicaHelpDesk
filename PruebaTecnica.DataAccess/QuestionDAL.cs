@@ -18,22 +18,64 @@ namespace PruebaTecnica.DataAccess
             this.connectionString = connectionString;
         }
 
-        //public async Task<string> createQuestion(Question question)
-        //{
-        //    //using (SqlConnection connection = new SqlConnection(connectionString))
-        //    //{
-        //    //    await connection.OpenAsync();
+        public async Task<string> createQuestion(Question question)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
 
-        //    //    // Procede a crear el usuario
-        //    //    SqlCommand command = new SqlCommand("CreateQuestion", connection);
-        //    //    command.CommandType = CommandType.StoredProcedure;
+                // Procede a crear el usuario
+                SqlCommand command = new SqlCommand("CreateQuestion", connection);
+                command.CommandType = CommandType.StoredProcedure;
 
-        //    //    command.Parameters.AddWithValue("@UserName", usuario.UserName);
-        //    //    command.Parameters.AddWithValue("@UserPassword", usuario.UserPassword);
+                command.Parameters.AddWithValue("@QuestionText", question.QuestionText);
+                command.Parameters.AddWithValue("@CreateDate", question.CreateDate);
+                command.Parameters.AddWithValue("@Estatus", question.Estatus);
+                command.Parameters.AddWithValue("@UserId", question.UserId);
 
-        //    //    string result = (string)await command.ExecuteScalarAsync();
-        //    //    return result;
-        //    //}
-        //}
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    return reader.ToString();
+                }
+            }
+
+
+        }
+
+        public async Task<IEnumerable<Question>> listQuestions()
+        {
+            List<Question> questions = new List<Question>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand("SelectAllQuestionsWithUser", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        Question loggedInUser = new Question
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            QuestionText = reader.GetString(reader.GetOrdinal("QuestionText")),
+                            CreateDate = reader.GetDateTime(reader.GetOrdinal("CreateDate")),
+                            Estatus = reader.GetInt32(reader.GetOrdinal("Estatus")),
+                            UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                            User = new User 
+                            {
+                                UserName = reader.GetString(reader.GetOrdinal("UserName")) 
+                            }
+                        };
+
+                        questions.Add(loggedInUser);
+                    }
+                }
+            }
+
+            return questions;
+        }
+
     }
 }

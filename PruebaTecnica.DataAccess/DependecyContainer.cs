@@ -13,14 +13,13 @@ namespace PruebaTecnica.DataAccess
     {
         public static IServiceCollection AddDALDependecies(this IServiceCollection services, IConfiguration configuration)
         {
-            // Registrar la cadena de conexión como un servicio singleton
             string connectionString = configuration.GetConnectionString("url");
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            // Registrar UserDAL con la cadena de conexión proporcionada
             services.AddScoped<UserDAL>(provider => new UserDAL(connectionString));
+            services.AddScoped<QuestionDAL>(provider => new QuestionDAL(connectionString));
 
             return services;
         }

@@ -15,5 +15,6 @@ namespace PruebaTecnica.DataAccess
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Question> Questions { get; set; }
     }
 }
