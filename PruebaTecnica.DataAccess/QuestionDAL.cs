@@ -77,5 +77,46 @@ namespace PruebaTecnica.DataAccess
             return questions;
         }
 
+        public async Task<IEnumerable<Question>> ListMyQuestionsAsync(int id)
+        {
+            List<Question> questions = new List<Question>();
+
+            if (id == null)
+            {
+                return questions;
+            }
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand("SelectQuestionsByUserId", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@UserId", id);
+
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        Question question = new Question
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            QuestionText = reader.GetString(reader.GetOrdinal("QuestionText")),
+                            CreateDate = reader.GetDateTime(reader.GetOrdinal("CreateDate")),
+                            Estatus = reader.GetInt32(reader.GetOrdinal("Estatus")),
+                            UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                            User = new User
+                            {
+                                UserName = reader.GetString(reader.GetOrdinal("UserName"))
+                            }
+                        };
+
+                        questions.Add(question);
+                    }
+                }
+            }
+
+            return questions;
+        }
+
     }
 }

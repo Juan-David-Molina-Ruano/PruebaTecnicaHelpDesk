@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PruebaTecnica.BusinessEntities;
 using PruebaTecnica.BusinessLogic;
+using System.Security.Claims;
 
 namespace PruebaTecnica.UI.Controllers
 {
@@ -20,12 +21,6 @@ namespace PruebaTecnica.UI.Controllers
         {
             var questions = await _questionBL.listQuestions();
             return View(questions);
-        }
-
-        // GET: QuestionController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
         }
 
         // GET: QuestionController/Create
@@ -48,6 +43,12 @@ namespace PruebaTecnica.UI.Controllers
             return View(model);
         }
 
+        public async Task<ActionResult> myQuestions(int id)
+        {
+            var questions = await _questionBL.ListMyQuestionsAsync(id);
+            return View(questions);
+        }
+
         // POST: QuestionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -64,16 +65,19 @@ namespace PruebaTecnica.UI.Controllers
             }
         }
 
+
+
         // GET: QuestionController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult editMyQuestions(int id)
         {
+
             return View();
         }
 
         // POST: QuestionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult editMyQuestions(int id, Question question)
         {
             try
             {
@@ -85,25 +89,8 @@ namespace PruebaTecnica.UI.Controllers
             }
         }
 
-        // GET: QuestionController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
-        // POST: QuestionController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+
+
     }
 }

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<PruebaTecnica.BusinessEntities.Answer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <h1>Answers</h1>
+
+    <div class="row">
+        @foreach (var answerGroup in Model.GroupBy(a => a.QuestionId))
+        {
+            <div class="col-md-12">
+                <h3>Question: @answerGroup.First().Question.QuestionText</h3>
+
+                <div class="list-group">
+                    @foreach (var item in answerGroup)
+                    {
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <small>@item.CreateDate.ToString("dd/MM/yyyy")</small>
+                            </div>
+                            <p class="mb-1">@item.AnswerText</p>
+                            <small>User: @item.User.UserName</small>
+                        </div>
+                    }
+                </div>
+                
+            </div>
+        }
+        <a asp-action="Index" asp-controller="Question" style="margin-top:20px; margin-left:12px;" class="btn btn-secondary col-md-2" >Cancel</a>
+    </div>
+</div>

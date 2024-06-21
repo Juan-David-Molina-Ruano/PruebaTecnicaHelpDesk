@@ -23,5 +23,10 @@ namespace PruebaTecnica.BusinessLogic
         {
             return await _answerDAL.obtenerAnswersQuestion(questionId);
         }
+
+        public async Task<string> SaveAnswer(Answer answer)
+        {
+            return await _answerDAL.SaveAnswer(answer);
+        }
     }
 }

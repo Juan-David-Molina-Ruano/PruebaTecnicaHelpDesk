@@ -43,6 +43,10 @@ namespace PruebaTecnica.DataAccess
                             User = new User
                             {
                                 UserName = reader.GetString(reader.GetOrdinal("UserDisplayName"))
+                            },
+                            Question = new Question
+                            {
+                                QuestionText = reader.GetString(reader.GetOrdinal("QuestionText"))
                             }
                         };
 
@@ -53,5 +57,29 @@ namespace PruebaTecnica.DataAccess
 
             return answers;
         }
+
+        public async Task<string> SaveAnswer(Answer answer)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                SqlCommand command = new SqlCommand("InsertAnswer", connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                // Parameters for the stored procedure
+                command.Parameters.AddWithValue("@AnswerText", answer.AnswerText);
+                command.Parameters.AddWithValue("@CreateDate", answer.CreateDate);
+                command.Parameters.AddWithValue("@UserId", answer.UserId);
+                command.Parameters.AddWithValue("@QuestionId", answer.QuestionId);
+
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    return reader.ToString();
+                }
+
+            }
+        }
+
     }
 }

@@ -1,16 +1,17 @@
 ﻿@model IEnumerable<PruebaTecnica.BusinessEntities.Question>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "My Questions";
 }
 
 <div class="container">
     <div class="row">
-        <div class="col-md-10">
-            <h1>Questions</h1>
+        <div class="col-md-8">
+            <h1>My Questions</h1>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-4">
             <p class="text-md-right">
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
                 <a asp-action="Create" class="btn btn-primary">Make a question</a>
             </p>
         </div>
@@ -27,16 +28,17 @@
                             <strong>Created Date:</strong> @item.CreateDate.ToString("dd/MM/yyyy")<br />
                         </div>
                         <div class="col-md-4">
-                            <strong>Status:</strong> @Html.DisplayFor(modelItem => item.Estatus)<br />
+                            <strong>Estatus:</strong> @Html.DisplayFor(modelItem => item.Estatus)<br />
                         </div>
                         <div class="col-md-4">
                             <strong>Created by:</strong> @Html.DisplayFor(modelItem => item.User.UserName)
                         </div>
                     </div>
                 </p>
-                <a asp-action="Index" asp-controller="Answer" asp-route-id="@item.Id" class="btn btn-info">Ver respuestas</a>
-                <a asp-action="Create" asp-controller="Answer" asp-route-questionId="@item.Id" class="btn btn-info">Responder</a>
+                <a asp-action="Index" asp-controller="Answer" asp-route-id="@item.Id" class="btn btn-info">View Answers</a>
+                <a asp-action="Edit" asp-controller="Question" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a>
             </div>
         }
     </div>
 </div>
+

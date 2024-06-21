@@ -27,5 +27,10 @@ namespace PruebaTecnica.BusinessLogic
         {
            return await _questionDAL.listQuestions();
         }
+
+        public async Task<IEnumerable<Question>> ListMyQuestionsAsync(int id)
+        {
+            return await _questionDAL.ListMyQuestionsAsync(id);
+        }
     }
 }
