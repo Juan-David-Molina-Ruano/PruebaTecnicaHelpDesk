@@ -45,7 +45,7 @@ namespace PruebaTecnica.UI.Controllers
 
         public async Task<ActionResult> myQuestions(int id)
         {
-            var questions = await _questionBL.ListMyQuestionsAsync(id);
+            var questions = await _questionBL.listMyQuestionsAsync(id);
             return View(questions);
         }
 
@@ -68,19 +68,24 @@ namespace PruebaTecnica.UI.Controllers
 
 
         // GET: QuestionController/Edit/5
-        public ActionResult editMyQuestions(int id)
+        public async Task<ActionResult> editMyQuestions(int id)
         {
-
-            return View();
+            var question = await _questionBL.GetQuestionById(id);
+            if (question == null)
+            {
+                return RedirectToAction("myQuestions","Question");
+            }
+            return View(question);
         }
 
         // POST: QuestionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult editMyQuestions(int id, Question question)
+        public async Task<ActionResult> editMyQuestions(int id, Question question)
         {
             try
             {
+                await _questionBL.UpdateQuestion(question);
                 return RedirectToAction(nameof(Index));
             }
             catch

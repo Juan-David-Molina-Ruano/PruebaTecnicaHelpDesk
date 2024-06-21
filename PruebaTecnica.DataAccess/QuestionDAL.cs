@@ -77,7 +77,7 @@ namespace PruebaTecnica.DataAccess
             return questions;
         }
 
-        public async Task<IEnumerable<Question>> ListMyQuestionsAsync(int id)
+        public async Task<IEnumerable<Question>> listMyQuestionsAsync(int id)
         {
             List<Question> questions = new List<Question>();
 
@@ -117,6 +117,60 @@ namespace PruebaTecnica.DataAccess
 
             return questions;
         }
+
+        public async Task<int> UpdateQuestion(Question question)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                SqlCommand command = new SqlCommand("UpdateQuestion", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@Id", question.Id);
+                command.Parameters.AddWithValue("@QuestionText", question.QuestionText);
+                command.Parameters.AddWithValue("@Estatus", question.Estatus);
+                command.Parameters.AddWithValue("@NewCreateDate", question.CreateDate);
+
+                return await command.ExecuteNonQueryAsync();
+            }
+        }
+
+        public async Task<Question> GetQuestionById(int id)
+        {
+            Question question = null;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand("GetQuestionById", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Id", id);
+
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        question = new Question
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            QuestionText = reader.GetString(reader.GetOrdinal("QuestionText")),
+                            CreateDate = reader.GetDateTime(reader.GetOrdinal("CreateDate")),
+                            Estatus = reader.GetInt32(reader.GetOrdinal("Estatus")),
+                            UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                            User = new User
+                            {
+                                UserName = reader.GetString(reader.GetOrdinal("UserName"))
+                            }
+                        };
+                    }
+                }
+            }
+
+            return question;
+        }
+
+
 
     }
 }
