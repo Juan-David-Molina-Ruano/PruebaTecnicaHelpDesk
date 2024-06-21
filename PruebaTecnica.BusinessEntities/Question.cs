@@ -9,8 +9,10 @@ namespace PruebaTecnica.BusinessEntities
 {
     public class Question
     {
-        [Key]
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Question text is required")]
+        [StringLength(250, MinimumLength = 2, ErrorMessage = "Username must be between 2 and 250 characters")]
         public string QuestionText { get; set; }
         public DateTime CreateDate { get; set; }
         public int Estatus { get; set; }
