@@ -15,9 +15,6 @@ namespace PruebaTecnica.DataAccess
         {
             string connectionString = configuration.GetConnectionString("url");
 
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(connectionString));
-
             services.AddScoped<UserDAL>(provider => new UserDAL(connectionString));
             services.AddScoped<QuestionDAL>(provider => new QuestionDAL(connectionString));
             services.AddScoped<AnswerDAL>(provider => new AnswerDAL(connectionString));
